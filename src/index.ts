@@ -18,7 +18,7 @@ const server = fastify({
 server.register(fastifyws);
 server.register(commandHandler(registerCommands));
 server.register(async (fastify) => {
-  fastify.get("/", { websocket: true }, onConnection);
+  fastify.get("/ws", { websocket: true }, onConnection);
 });
 
 server.listen({ port: 3010 }, (err) => {
