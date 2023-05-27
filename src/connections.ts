@@ -2,6 +2,12 @@ import { SocketStream } from "@fastify/websocket";
 import { FastifyRequest } from "fastify";
 
 export function onConnection(connection: SocketStream, req: FastifyRequest) {
+  req.log.info("Connection established");
+
+  connection.socket.on("close", () => {
+    req.log.info("Connection closed");
+  });
+
   connection.socket.on("message", async (data: ArrayBuffer) => {
     try {
       await onMessage(data, connection, req);

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Websocket Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10"
+  >
+    <div
+      class="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden"
+    >
+      <div
+        id="messages"
+        class="flex flex-col flex-grow h-0 p-4 overflow-auto"
+      ></div>
+
+      <div class="p-4">
+        <form id="command-form" class="relative">
+          <div
+            class="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600"
+          >
+            <textarea
+              rows="3"
+              id="payload-textarea"
+              class="block w-full resize-none border-0 bg-transparent p-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+              placeholder="Set your Payload..."
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="absolute bottom-2 right-2 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      document.getElementById("payload-textarea").value = JSON.stringify(
+        { cmd: "" },
+        null,
+        2
+      );
+
+      const colors = {
+        info: "bg-gray-300",
+        server: "bg-green-300",
+        client: "bg-blue-300",
+      };
+
+      const renderMessage = (() => {
+        const messages = document.getElementById("messages");
+        return (text, color = colors.info) => {
+          const div = document.createElement("div");
+          div.className = `w-full mt-2 p-3 rounded-lg ${color}`;
+          const pre = document.createElement("pre");
+          pre.className = "text-sm whitespace-pre-wrap";
+          div.appendChild(pre);
+          pre.textContent = text;
+          messages.prepend(div);
+        };
+      })();
+
+      const socket = new WebSocket("ws://localhost:3010/ws");
+
+      const ping = () => {
+        const payload = {
+          cmd: "ping",
+          nonce: Math.floor(Math.random() * 10000),
+        };
+        socket.send(JSON.stringify(payload));
+        renderMessage(JSON.stringify(payload, null, 2), colors.client);
+      };
+
+      socket.addEventListener("open", () => {
+        renderMessage("Connection established.");
+        ping();
+      });
+
+      socket.addEventListener("message", (event) => {
+        renderMessage(
+          JSON.stringify(JSON.parse(event.data), null, 2),
+          colors.server
+        );
+      });
+
+      document
+        .getElementById("command-form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const payload = event.target[0].value;
+          if (payload == null) {
+            return;
+          }
+          socket.send(payload);
+          try {
+            renderMessage(
+              JSON.stringify(JSON.parse(payload), null, 2),
+              colors.client
+            );
+          } catch (e) {
+            renderMessage(payload, colors.client);
+          }
+          event.target[0].value = JSON.stringify({ cmd: "" }, null, 2);
+        });
+    </script>
+  </body>
+</html>
