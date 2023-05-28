@@ -108,6 +108,7 @@ const changes: Array<{
     },
   },
   { type: "create", service: initial[4] },
+  { type: "create", service: initial[1] },
 ];
 
 function randomInt(min: number, max: number) {
