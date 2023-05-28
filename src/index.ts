@@ -5,6 +5,7 @@ import { onConnection } from "./connections";
 import { commandHandler } from "./commands/handler";
 import { registerCommands } from "./commands/strategies";
 import { join } from "path";
+import { servicesRepository } from "./services/repository";
 
 const server = fastify({
   logger: pino(
@@ -20,6 +21,7 @@ server.register(import("@fastify/static"), {
 });
 server.register(import("@fastify/websocket"));
 server.register(commandHandler(registerCommands));
+server.register(servicesRepository);
 
 server.get("/", function (req, reply) {
   reply.sendFile("index.html");
