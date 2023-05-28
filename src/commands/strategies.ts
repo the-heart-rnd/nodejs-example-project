@@ -7,7 +7,7 @@ export interface PingCommand extends Command<"ping"> {
 export function registerCommands(registry: CommandHandlerRegistry) {
   registry.register<PingCommand>("ping", (command, connection) => {
     connection.socket.send(
-      JSON.stringify({ cmd: "pong", nonce: command.nonce })
+      JSON.stringify({ event: "pong", nonce: command.nonce })
     );
   });
 }
