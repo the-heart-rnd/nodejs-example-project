@@ -2,10 +2,12 @@ import fastify from "fastify";
 import pino from "pino";
 import pretty from "pino-pretty";
 import { onConnection } from "./connections";
-import { commandHandler } from "./commands/handler";
+import { commandHandler } from "./commands/plugin";
 import { registerCommands } from "./commands/strategies";
 import { join } from "path";
-import { servicesRepository } from "./services/repository";
+import { servicesRepository } from "./services/plugin";
+
+// Modifying this file is not required to work on the interview task.
 
 const server = fastify({
   logger: pino(

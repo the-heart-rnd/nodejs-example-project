@@ -9,7 +9,9 @@ import {
   FastifyTypeProvider,
   FastifyTypeProviderDefault,
 } from "fastify/types/type-provider";
-import { Handler } from "src/commands/handler";
+import { CommandHandlerRegistry } from "../handler";
+
+// Modifying this file is not required to work on the interview task.
 
 declare module "fastify" {
   export interface FastifyInstance<
@@ -19,6 +21,6 @@ declare module "fastify" {
     Logger extends FastifyBaseLogger = FastifyBaseLogger,
     TypeProvider extends FastifyTypeProvider = FastifyTypeProviderDefault
   > {
-    commandHandler: Handler;
+    commandHandler: Omit<CommandHandlerRegistry, "register">;
   }
 }

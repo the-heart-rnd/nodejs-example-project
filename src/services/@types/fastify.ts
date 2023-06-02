@@ -11,6 +11,8 @@ import {
 } from "fastify/types/type-provider";
 import { ServicesRepository } from "../repository";
 
+// Modifying this file is not required to work on the interview task.
+
 declare module "fastify" {
   export interface FastifyInstance<
     RawServer extends RawServerBase = RawServerDefault,

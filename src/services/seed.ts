@@ -1,6 +1,8 @@
 import { Service } from "./models";
 import { ServicesRepository } from "./repository";
 
+// Modifying this file is not required to work on the interview task.
+
 const initial: Service[] = [
   {
     id: "2f8d8268-9b1b-41e6-91b4-9ff6440f6cbb",

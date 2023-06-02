@@ -1,3 +1,9 @@
+<!--
+  index.html is an example websocket client that can be used to test the server.
+  Modifying this file is not required to work on the interview task.
+  You can use your own websocket client if you prefer.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -52,6 +58,7 @@
         info: "bg-gray-300",
         server: "bg-green-300",
         client: "bg-blue-300",
+        error: "bg-red-300",
       };
 
       const renderMessage = (() => {
@@ -81,6 +88,10 @@
       socket.addEventListener("open", () => {
         renderMessage("Connection established.");
         ping();
+      });
+
+      socket.addEventListener("close", () => {
+        renderMessage("Connection lost.", colors.error);
       });
 
       socket.addEventListener("message", (event) => {

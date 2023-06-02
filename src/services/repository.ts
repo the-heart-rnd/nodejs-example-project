@@ -1,7 +1,5 @@
 import { Service } from "./models";
-import fastifyPlugin from "fastify-plugin";
 import { FastifyBaseLogger } from "fastify/types/logger";
-import { seed } from "./seed";
 
 export class ServicesRepository {
   private services = new Map<string, Service>();
@@ -38,10 +36,3 @@ export class ServicesRepository {
     );
   }
 }
-
-export const servicesRepository = fastifyPlugin((fastify, opts, next) => {
-  const repository = new ServicesRepository(fastify.log);
-  seed(repository);
-  fastify.decorate("servicesRepository", repository);
-  next();
-});

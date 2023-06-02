@@ -1,6 +1,5 @@
 import { SocketStream } from "@fastify/websocket";
 import { FastifyRequest } from "fastify";
-import fastifyPlugin from "fastify-plugin";
 
 export interface Command<T extends string> {
   cmd: T;
@@ -35,15 +34,3 @@ export class CommandHandlerRegistry {
     }
   }
 }
-
-export type Handler = Omit<CommandHandlerRegistry, "register">;
-
-export const commandHandler = (
-  applyStrategies: (registry: CommandHandlerRegistry) => void
-) =>
-  fastifyPlugin((fastify, opts, next) => {
-    const registry = new CommandHandlerRegistry();
-    applyStrategies(registry);
-    fastify.decorate("commandHandler", registry);
-    next();
-  });
